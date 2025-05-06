@@ -1,3 +1,4 @@
+-- comissioned by devtakefl1ght
 local settings = {
     fov = 220,
     distance = 15,
