@@ -1,0 +1,108 @@
+local settings = {
+    fov = 120,
+    distance = 10,
+    delay = 0.1
+}
+
+local virtual_input_manager = game:GetService("VirtualInputManager")
+local local_player = game.Players.LocalPlayer
+local animations = {
+    "rbxassetid://6678908798", "rbxassetid://6678909967", "rbxassetid://6678913068", "rbxassetid://11753430563", "rbxassetid://6678914641",
+    "rbxassetid://6907975812", "rbxassetid://11752087150", "rbxassetid://11752098805", "rbxassetid://11752104735", "rbxassetid://11752111783",
+    "rbxassetid://6708118912", "rbxassetid://6835409260", "rbxassetid://6708121991", "rbxassetid://6708121121", "rbxassetid://14349499924",
+    "rbxassetid://14349501923", "rbxassetid://14349504049", "rbxassetid://14349506078", "rbxassetid://14483365680", "rbxassetid://6995853850",
+    "rbxassetid://6996771877", "rbxassetid://7011157033", "rbxassetid://11941288362", "rbxassetid://11941292174", "rbxassetid://11941309395",
+    "rbxassetid://11941314458", "rbxassetid://7845695759", "rbxassetid://7845695236", "rbxassetid://7845696985", "rbxassetid://7845696360",
+    "rbxassetid://13537213350", "rbxassetid://13537219514", "rbxassetid://13537224645", "rbxassetid://13537230809",
+}
+
+local is_player_attacking = function(player)
+    if not player then return false end
+    local character = player.Character
+    if not character then return false end
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return false end
+    local animator = humanoid:FindFirstChildOfClass("Animator")
+    if not animator then return false end
+    for index = 1, #animator:GetPlayingAnimationTracks() do
+        local track = animator:GetPlayingAnimationTracks()[index]
+        local anim_id = track.Animation.AnimationId
+        for i = 1, #animations do
+            if anim_id == animations[i] then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local get_players_around = function(local_player, distance)
+    local players_in_range = {}
+    local local_character = local_player.Character
+    if local_character then
+        local local_root = local_character:FindFirstChild("HumanoidRootPart")
+        if local_root then
+            local players = game.Players:GetPlayers()
+            for index = 1, #players do
+                local player = players[index]
+                if player ~= local_player then
+                    local character = player.Character
+                    if character then
+                        local root = character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            local magnitude = (local_root.Position - root.Position).Magnitude
+                            if magnitude <= distance then
+                                table.insert(players_in_range, player)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return players_in_range
+end
+
+local is_player_facing = function(player)
+    if not player then return end
+    local local_character = local_player.Character
+    local character = player.Character
+    if local_character and character then
+        local local_root = local_character:FindFirstChild("HumanoidRootPart")
+        local root = character:FindFirstChild("HumanoidRootPart")
+        if local_root and root then
+            local look_vector = root.CFrame.LookVector
+            local unit = (local_root.Position - root.Position).Unit
+            local value = math.pow((look_vector - unit).Magnitude / 2, 2)
+            if value >= settngs.fov then
+                return false
+            end
+            return true
+        end
+    end
+end
+
+local get_tool = function()
+    local character = local_player.Character
+    if character then
+        local tool = character:FindFirstChildOfClass("Tool")
+        if tool then
+            return tool
+        end
+    end
+    return nil
+end
+
+while true do
+    local players_in_range = get_players_around(local_player, settngs.distance)
+    for index = 1, #players_in_range do
+        local player = players_in_range[index]
+        if is_player_facing(player) and is_player_attacking(player) and get_tool() then
+            print("ye")
+            virtual_input_manager:SendMouseButtonEvent(0, 0, 1, true, game, 0)
+            task.wait(0.3)
+            virtual_input_manager:SendMouseButtonEvent(0, 0, 1, false, game, 0)
+        end
+    end
+    task.wait(0.1)
+end
