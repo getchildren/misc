@@ -1,7 +1,9 @@
 local settings = {
-    fov = 120,
-    distance = 10,
-    delay = 0.1
+    fov = 220,
+    distance = 15,
+    delay = 0.05,
+    hold_delay = 0,
+    unhold_delay = 0.3
 }
 
 local virtual_input_manager = game:GetService("VirtualInputManager")
@@ -98,10 +100,12 @@ while true do
     for index = 1, #players_in_range do
         local player = players_in_range[index]
         if is_player_facing(player) and is_player_attacking(player) and get_tool() then
-            print("ye")
-            virtual_input_manager:SendMouseButtonEvent(0, 0, 1, true, game, 0)
-            task.wait(0.3)
+            task.wait(settings.hold_delay)
+			virtual_input_manager:SendMouseButtonEvent(0, 0, 1, true, game, 0)
+            print("holding")
+			task.wait(settings.unhold_delay)
             virtual_input_manager:SendMouseButtonEvent(0, 0, 1, false, game, 0)
+			print("unholding")
         end
     end
     task.wait(settings.delay)
