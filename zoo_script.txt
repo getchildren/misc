@@ -1,5 +1,5 @@
 -- comissioned by devtakefl1ght
-local settings = {
+_G.settings = _G.settings or {
     fov = 220,
     distance = 15,
     delay = 0.05,
