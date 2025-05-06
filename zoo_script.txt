@@ -74,7 +74,7 @@ local is_player_facing = function(player)
             local look_vector = root.CFrame.LookVector
             local unit = (local_root.Position - root.Position).Unit
             local value = math.pow((look_vector - unit).Magnitude / 2, 2)
-            if value >= settngs.fov then
+            if value >= settings.fov then
                 return false
             end
             return true
@@ -94,7 +94,7 @@ local get_tool = function()
 end
 
 while true do
-    local players_in_range = get_players_around(local_player, settngs.distance)
+    local players_in_range = get_players_around(local_player, settings.distance)
     for index = 1, #players_in_range do
         local player = players_in_range[index]
         if is_player_facing(player) and is_player_attacking(player) and get_tool() then
@@ -104,5 +104,5 @@ while true do
             virtual_input_manager:SendMouseButtonEvent(0, 0, 1, false, game, 0)
         end
     end
-    task.wait(0.1)
+    task.wait(settings.delay)
 end
