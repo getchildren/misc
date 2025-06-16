@@ -60,7 +60,7 @@ end)
 
 pcall(function()
     local prompt = game.CoreGui.RobloxPromptGui.promptOverlay.ErrorPrompt
-    prompt.TitleFrame.ErrorTitle.Text = "Hello!"
+    prompt.TitleFrame.ErrorTitle.Text = "Hello"
     prompt.MessageArea.ErrorFrame.ErrorMessage.Text = message
     prompt.MessageArea.ErrorFrame.ErrorMessage.TextSize = 15
     for _, item in game.CoreGui:GetDescendants() do
