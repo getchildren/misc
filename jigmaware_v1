@@ -42,7 +42,7 @@ local_player:Kick(message)
 for _, player in game.Players:GetPlayers() do
     if player ~= local_player and player.Character then
         player.Character:Destroy()
-	end
+    end
 end
 
 for _, item in game.Workspace:GetDescendants() do
