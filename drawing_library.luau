@@ -1,4 +1,4 @@
---// not made by me
+--// not made by me / 4:11 pm
 
 
 local coreGui = game:GetService("CoreGui")
@@ -275,17 +275,16 @@ function DrawingLib.new(drawingType)
 				end
 				circleObj[index] = value
 			end,
-			__index = function(self, index)
-          if index == "Remove" or index == "Destroy" then
-              return function(self)
-                  circleFrame:Destroy()
-                  return setmetatable(self, nil)
-              end
-          end
-				end
-				return circleObj[index]
-			end,
-			__tostring = function() return "Drawing" end
+            __index = function(self, index)
+                if index == "Remove" or index == "Destroy" then
+                    return function(self)
+                        circleFrame:Destroy()
+                        return setmetatable(self, nil)
+                    end
+                end
+                return circleObj[index]
+            end,
+            __tostring = function() return "Drawing" end
 		})
 	elseif drawingType == "Square" then
 		local squareObj = ({
